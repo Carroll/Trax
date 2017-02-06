@@ -16,6 +16,7 @@ c = gamestring.replace(' ','')
 game = list(c)
 
 # TODO: the various structures need documentation, especially those with unclear names (T, TT).
+#just a test
 Label = []
 Moves = []
 
