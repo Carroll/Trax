@@ -3,27 +3,29 @@
 from __future__ import print_function
 import sys
 try:
-   import Tkinter as tk
+    import Tkinter as tk
 except:
-   import tkinter as tk
+    import tkinter as tk
 
 if len(sys.argv) > 1:
-   gamestring = sys.argv[1]
+    gamestring = sys.argv[1]
 else:
-   gamestring="@0/ @1/ A0/ @1/ B0/ B4\\ D3/ A0/ @3+ A0/ @1+ @2+ F3/ D5+ G4+ G2\\ H3\\ G1+ G0\\ G0\\ H2+ I5+ J5\\ H0\\ J3\\ D4+ F3+ F9+ H8+ I7+ G10\\ K7/ L7/ G11\\ E10+ D9/ @5/ B4\\ A3/ C2+"
-c=gamestring.replace(' ','')
-game=list(c)
+    gamestring = "@0/ B1+ C1/ B0/ B3\ @3\ E2/ E1/ E4\ F2+ E0/ G1\ F0+ C6+ G4\ G0+ H1+ G0\ I3\ J3\ H7\ H8\ D9+ C10\ F9\ F10\ F11\ E12+ C11+ H10+ G12+ H5+ I6+ I9+ J6/ K8/ A9/ @8\ E13\ C10+ E14+ E15\ E16\ C14\ C12+ B11+ C15+ B14/ A14+ @14\ B15\ J13+ K10\ J14/ I14\ G14+ M6/ K5+ L10+ N5+ O4\ N3+ M2+ P3/ N2/ N8\ O9/ I0/ J1/ N2/ I0\ H1\ Q5+ M2/ E5\ D5\ N12\ P12+ Q11+ R10+ P13\ Q13\ K1/ I0+ H0/ H0/ H0/ G1/ H0+ G0+ F1+ G0/ E3/ D3/ F5/ E4+ H10+ G8+ E8+ G11+ C3/"
 
+c = gamestring.replace(' ','')
+game = list(c)
 
+# TODO: the various structures need documentation, especially those with unclear names (T, TT).
 Label = []
 Moves = []
 
-T=[[('',True),('',True),('',True),('',True)],
-   [('',True),('',True),('',True),('',True)],
-   [('',True),('',True),('',True),('',True)],
-   [('',True),('',True),('',True),('',True)]
-   ]
+T = [[('',True), ('',True), ('',True), ('',True), ],
+     [('',True), ('',True), ('',True), ('',True), ],
+     [('',True), ('',True), ('',True), ('',True), ],
+     [('',True), ('',True), ('',True), ('',True), ],
+    ]
 
+# GUI methods
 def coord(x,y,string):
     label = tk.Label(canvas, text=string, bg="light green")
     label.place(x=size/2-5+x*size,y=size/2-5+y*size)
@@ -66,59 +68,74 @@ def _create_circle_arc(self, x, y, r, **kwargs):
         del kwargs["end"]
     return self.create_arc(x-r, y-r, x+r, y+r, **kwargs)
 
+# board and tile methods (placing, turning, force moves, etc)
 def tournet(t):
-    (a,b,c,d)=t
+    """ turn """
+    # TODO: this method needs documentation
+
+    (a,b,c,d) = t
     return (b,c,d,a)
 
 def tourneTT():
+    """ turn TT """
+    # TODO: this method needs documentation
+
     global TT
-    UT=[]
-    i=len(TT[0])-1
-    while i>=0:
-        L=[]
+    UT = []
+    i = len(TT[0]) - 1
+    while i >= 0:
+        L = []
         for j in TT:
             L.append(tournet(j[i]))
         UT.append(L)
-        i-=1
+        i -= 1
     TT = UT
     
 def affich():
+    """ display """
+    # TODO: this method needs documentation
+
     global size,wb,bb
-    canvas.config(width=size*(len(TT[0])+.5),height=size*(len(TT)))
-    size=min(60,height/(len(TT)+correct))
-    wb=size/8
-    bb=size/8+1
+    canvas.config(width=size * (len(TT[0]) + .5),
+                  height=size * (len(TT)))
+    size = min(60, height / (len(TT) + correct))
+    wb = size/8
+    bb = size/8 + 1
     row = '0/'
-    r0=ord(row[0])-48
-    r1=ord(row[1])-48
+    r0 = ord(row[0]) - 48
+    r1 = ord(row[1]) - 48
     for j in range(0,len(TT)-1):
-        if r0==0: row = ' '+chr(r1+48)
-        else: row = chr(r0+48)+chr(r1+48)
+        if r0 == 0:
+            row = ' ' + chr(r1 + 48)
+        else: row = chr(r0 + 48) + chr(r1 + 48)
         if j>0:
-            coord(0,j,row)
-            coord(len(TT[0])-1,j,row)
+            coord(0, j, row)
+            coord(len(TT[0]) - 1, j, row)
         r1+=1
-        if r1>9:
-            r1-=10
-            r0+=1
-            row = chr(r0+48)+chr(r1+48)
+        if r1 > 9:
+            r1 -= 10
+            r0 += 1
+            row = chr(r0 + 48) + chr(r1 + 48)
     col='?'
-    for i in range(0,len(TT[0])-1):
+    for i in range(0, len(TT[0]) - 1):
         if i>0:
-            coord(i,0,col)
-            coord(i,len(TT)-1,col)
+            coord(i, 0, col)
+            coord(i, len(TT) - 1, col)
         col=chr(ord(col)+1)
     for j in range(len(TT)):
         for i in range(len(TT[j])):
             t = invConc[invTupDic[TT[j][i]]]
-            if t[0]=='/':
-                slash(i,j,t[1])
-            elif t[0]=='\\':
-                backslash(i,j,t[1])
-            elif t[0]=='+':
-                plus(i,j,t[1])
+            if t[0] == '/':
+                slash(i, j, t[1])
+            elif t[0] == '\\':
+                backslash(i, j, t[1])
+            elif t[0] == '+':
+                plus(i, j, t[1])
                 
 def coupForceN(x,y): # on a joué en x,y on ne regarde qu'au nord (ouest et est)
+    """ force move """
+    # TODO: this method needs documentation
+
     valid = True
     a,b = x,y # pour decalage
     global TT
@@ -131,29 +148,29 @@ def coupForceN(x,y): # on a joué en x,y on ne regarde qu'au nord (ouest et est)
     if TT[y-1][x] == (2,2,2,2): # verif de case vide sinon pas possible
         t2n = TT[y-2][x] # deux au nord
         if t2n[2]==c: # face sud 2 plus loin bonne couleur
-            plus = (c,1-c,c,1-c)
+            plus = (c, 1-c, c, 1-c)
             #verif valid ouest et est
             if TT[y-1][x-1][1] != 2 and TT[y-1][x-1][1] != 1-c or TT[y-1][x+1][3] != 2 and TT[y-1][x+1][3] != 1-c:
                 #remettre TS
                 TT = TS
                 return False
             TT[y-1][x] = plus
-            if y-1==1:
-                TT.insert(0,len(T[0])*[(2,2,2,2)])
+            if y-1 == 1:
+                TT.insert(0, len(T[0]) * [(2,2,2,2)])
                 b+=1
-            valid = coupForce(a,b-1)
+            valid = coupForce(a, b-1)
         tno = TT[y-1][x-1] # case NO
-        if tno[1]==c: # face est de case NO
-            back = (1-c,1-c,c,c)
+        if tno[1] == c: # face est de case NO
+            back = (1-c, 1-c, c, c)
             #verif valid nord et est
-            if TT[y-2][x][2] != 2 and TT[y-2][x][2] != 1-c or TT[y-1][x+1][3] != 2 and TT[y-1][x+1][3] != 1-c:
+            if TT[y-2][x][2] != 2 and TT[y-2][x][2] != 1-c \or TT[y-1][x+1][3] != 2 and TT[y-1][x+1][3] != 1-c:
                 #remettre TS
                 TT = TS
                 return False
             TT[y-1][x] = back
-            valid = coupForce(a,b-1)
+            valid = coupForce(a, b-1)
         tne = TT[y-1][x+1] # case NE
-        if tne[3]==c: # face ouest de case NE
+        if tne[3] == c: # face ouest de case NE
             slash = (1-c,c,c,1-c)
             #verif valid nord et ouest
             if TT[y-2][x][2] != 2 and TT[y-2][x][2] != 1-c or TT[y-1][x-1][1] != 2 and TT[y-1][x-1][1] != 1-c:
@@ -165,6 +182,9 @@ def coupForceN(x,y): # on a joué en x,y on ne regarde qu'au nord (ouest et est)
     return valid
 
 def coupForce(x,y):
+    """ force move """
+    # TODO: this method needs documentation
+
     global TT
     a,b = x,y
     valid = True
@@ -173,51 +193,60 @@ def coupForce(x,y):
     for j in range(len(TT)):
         TS.append([])
         TS[j][:] = TT[j][:]
-    while valid and i<4:
-        i+=1
+    while valid and i < 4:
+        i += 1
         valid = coupForceN(a,b)
         if valid:
             tourneTT()
-            a,b = b,len(TT)-1-a
+            a, b = b, len(TT) - 1 - a
         else: 
             TT=TS
             return False
     return valid
 
 def mettreT(x,y,t):
+    """ put / place """
+    # TODO: this method needs documentation
+
     global TT
     valid = True
-    TS=[] #save
+    TS = [] #save
     for j in range(len(TT)):
         TS.append([])
         TS[j][:] = TT[j][:]
-    f=t[0]
+    f = t[0]
     #print (t,Conc[t])
     tup = TupDic[Conc[t]]
-    if TT[y-1][x][2] !=2 and TT[y-1][x][2] != tup[0] or TT[y+1][x][0] !=2 and TT[y+1][x][0] != tup[2] or       TT[y][x-1][1] !=2 and TT[y][x-1][1] != tup[3] or TT[y][x+1][3] !=2 and TT[y][x+1][3] != tup[1]:
+    if          TT [y-1] [x]   [2]  !=  2  and  TT [y-1] [x]   [2]  !=  tup[0] \
+            or  TT [y+1] [x]   [0]  !=  2  and  TT [y+1] [x]   [0]  !=  tup[2] \
+            or  TT [y]   [x-1] [1]  !=  2  and  TT [y]   [x-1] [1]  !=  tup[3] \
+            or  TT [y]   [x+1] [3]  !=  2  and  TT [y]   [x+1] [3]  !=  tup[1]:
+        valid = False
+        tup = TupDic[Conc[(f,False)]]
+        if          TT [y-1] [x]   [2]  !=  2  and  TT [y-1] [x]   [2]  !=  tup[0] \
+                or  TT [y+1] [x]   [0]  !=  2  and  TT [y+1] [x]   [0]  !=  tup[2] \
+                or  TT [y]   [x-1] [1]  !=  2  and  TT [y]   [x-1] [1]  !=  tup[3] \
+                or  TT [y]   [x+1] [3]  !=  2  and  TT [y]   [x+1] [3]  !=  tup[1]:
             valid = False
-            tup = TupDic[Conc[(f,False)]]
-            if TT[y-1][x][2] !=2 and TT[y-1][x][2] != tup[0] or TT[y+1][x][0] !=2 and TT[y+1][x][0] != tup[2] or               TT[y][x-1][1] !=2 and TT[y][x-1][1] != tup[3] or TT[y][x+1][3] !=2 and TT[y][x+1][3] != tup[1]:
-                valid = False
-            else:
-                TT[y][x] = tup
-                valid = coupForce(x,y)
+        else:
+            TT[y][x] = tup
+            valid = coupForce(x,y)
     else:
         TT[y][x] = tup
         valid = coupForce(x,y)
     if valid:
-        if x==1:
+        if x == 1:
             for i in TT:
                 i.insert(0,(2,2,2,2))
-        if x>=len(TT[0])-2:
+        if x >= len(TT[0]) - 2:
             for i in TT:
                 i.append((2,2,2,2))
-        if y==1:
+        if y == 1:
             TT.insert(0,len(TT[0])*[(2,2,2,2)])
-        if y>=len(TT)-2:
-            TT.append(len(TT[0])*[(2,2,2,2)])
+        if y >= len(TT) - 2:
+            TT.append(len(TT[0]) * [(2,2,2,2)])
     else: 
-        TT=TS
+        TT = TS
         print("Non valid move",x,y,t)
     return valid
 
@@ -228,32 +257,43 @@ canvas.grid()
 
 tk.Canvas.create_circle_arc = _create_circle_arc
 
+
+# TODO: the various structures need documentation
 TupDic = {0:(0,1,1,0),1:(1,0,0,1),2:(0,0,1,1),3:(1,1,0,0),4:(0,1,0,1),5:(1,0,1,0),6:(2,2,2,2)}
 invTupDic = {v:k for k,v in TupDic.items()}
-Conc = {('/',True):0,('/',False):1,('\\',True):2,('\\',False):3,('+',True):4,('+',False):5,('',True):6}
+Conc = {('/', True): 0,
+        ('/', False): 1,
+        ('\\', True): 2,
+        ('\\', False): 3,
+        ('+', True): 4,
+        ('+', False): 5,
+        ('', True): 6
+       }
 invConc = {v:k for k,v in Conc.items()}
 
-height = root.winfo_screenheight()-20 # window bar thickness
-correct=0.4
-TT=[]
+height = root.winfo_screenheight() - 20  # window bar thickness
+correct = 0.4
+
+# TODO: TT needs documentation
+TT = []
 for j in range(len(T)):
-    L=[]
+    L = []
     for i in range(len(T[j])):
         L.append(TupDic[Conc[T[j][i]]])
     TT.append(L)
-size=min(60,height/(len(TT)+correct))
-wb=size/8
-bb=size/8+1
+size = min(60, height / (len(TT) + correct))
+wb = size/8
+bb = size/8 + 1
 valid = True
 # game is a string of triplets XYT with Type \\ instead of \ 
-while len(game)>0:
-    x=ord(game.pop(0))-63
-    y=ord(game.pop(0))-ord('0')
-    t=game.pop(0)
-    if t=='/' or t=='\\' or t=='+':
-        y+=1
+while len(game) > 0:
+    x = ord(game.pop(0)) - 63
+    y = ord(game.pop(0)) - ord('0')
+    t = game.pop(0)
+    if t == '/' or t == '\\' or t == '+':
+        y += 1
     else:
-        y=1+10*y+ord(t)-ord('0')
+        y = 1 + 10*y + ord(t) - ord('0')
         t=game.pop(0)
     valid = mettreT(x,y,(t,True))
     if valid:
@@ -263,14 +303,16 @@ while len(game)>0:
         if valid:
             Moves.append((x,y,(t,False)))
 
-size=min(60,height/(len(TT)+correct))
+size=min(60, height / (len(TT) + correct))
 affich()    
 
 move = ''
 while move != 'q':
-    if sys.version[0]=='2': move = raw_input("move? ")
-    else: move = input("move? ")
-    if move=="" or move=="@@":
+    if sys.version[0] == '2':
+        move = raw_input("move? ")
+    else:
+        move = input("move? ")
+    if move == "" or move == "@@":
        print("undoing...")
        if Moves != []:
            Moves.pop(-1)
@@ -288,11 +330,11 @@ while move != 'q':
         t = move[2]
         x = ord(cx)-63
         y = ord(cy)-ord('0')
-        if t=='/' or t=='\\' or t=='+':
-            y+=1
+        if t == '/' or t == '\\' or t == '+':
+            y += 1
         else:
-            y=1+10*y+ord(t)-ord('0')
-            t=move[3]
+            y = 1 + 10*y + ord(t) - ord('0')
+            t = move[3]
         valid = mettreT(x,y,(t,True))
         if valid:
              Moves.append((x,y,(t,True)))
@@ -305,7 +347,7 @@ while move != 'q':
     for label in Label:
         label.destroy()
     Label = []
-    size=min(60,height/(len(TT)+correct))
+    size = min(60, height / (len(TT) + correct))
     affich()    
 
 
