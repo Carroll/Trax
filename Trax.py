@@ -20,6 +20,8 @@ game = list(c)
 Label = []
 Moves = []
 
+# Initial empty Trax board in with old tiles description ('/',True) is for example a / tile with white edge up
+# the two empty borders are to help to avoid edge of the game detection while placing forced tiles
 T = [[('',True), ('',True), ('',True), ('',True), ],
      [('',True), ('',True), ('',True), ('',True), ],
      [('',True), ('',True), ('',True), ('',True), ],
@@ -71,15 +73,15 @@ def _create_circle_arc(self, x, y, r, **kwargs):
 
 # board and tile methods (placing, turning, force moves, etc)
 def tournet(t):
-    """ turn """
-    # TODO: this method needs documentation
+    """ turn 
+    # turns a tile in new tuple format clockwise """
 
     (a,b,c,d) = t
     return (b,c,d,a)
 
 def tourneTT():
-    """ turn TT """
-    # TODO: this method needs documentation
+    """ turn TT 
+    # turns the board (and tiles) in new tuple format """
 
     global TT
     UT = []
