@@ -151,7 +151,8 @@ def coupForceN(x,y): # on a joué en x,y on ne regarde qu'au nord (ouest et est)
         if t2n[2]==c: # face sud 2 plus loin bonne couleur
             plus = (c, 1-c, c, 1-c)
             #verif valid ouest et est
-            if TT[y-1][x-1][1] != 2 and TT[y-1][x-1][1] != 1-c or TT[y-1][x+1][3] != 2 and TT[y-1][x+1][3] != 1-c:
+            if         TT [y-1] [x-1] [1] != 2 and TT [y-1] [x-1] [1] != 1-c \
+                    or TT [y-1] [x+1] [3] != 2 and TT [y-1] [x+1] [3] != 1-c:
                 #remettre TS
                 TT = TS
                 return False
@@ -164,7 +165,8 @@ def coupForceN(x,y): # on a joué en x,y on ne regarde qu'au nord (ouest et est)
         if tno[1] == c: # face est de case NO
             back = (1-c, 1-c, c, c)
             #verif valid nord et est
-            if TT[y-2][x][2] != 2 and TT[y-2][x][2] != 1-c \or TT[y-1][x+1][3] != 2 and TT[y-1][x+1][3] != 1-c:
+            if         TT [y-2] [x]   [2] != 2 and TT [y-2] [x]   [2] != 1-c \
+                    or TT [y-1] [x+1] [3] != 2 and TT [y-1] [x+1] [3] != 1-c:
                 #remettre TS
                 TT = TS
                 return False
@@ -174,7 +176,8 @@ def coupForceN(x,y): # on a joué en x,y on ne regarde qu'au nord (ouest et est)
         if tne[3] == c: # face ouest de case NE
             slash = (1-c,c,c,1-c)
             #verif valid nord et ouest
-            if TT[y-2][x][2] != 2 and TT[y-2][x][2] != 1-c or TT[y-1][x-1][1] != 2 and TT[y-1][x-1][1] != 1-c:
+            if         TT [y-2] [x]   [2] != 2 and TT [y-2] [x]   [2] != 1-c \
+                    or TT [y-1] [x-1] [1] != 2 and TT [y-1] [x-1] [1] != 1-c:
                 #remettre TS
                 TT = TS
                 return False
