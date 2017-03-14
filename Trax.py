@@ -123,22 +123,6 @@ def _create_circle_arc(self, x, y, r, **kwargs):
         del kwargs["end"]
     return self.create_arc(x-r, y-r, x+r, y+r, **kwargs)
 
-def tournet(t):
-    (a,b,c,d)=t
-    return (b,c,d,a)
-
-def tourneTT():
-    global TT
-    UT=[]
-    i=len(TT[0])-1
-    while i>=0:
-        L=[]
-        for j in TT:
-            L.append(tournet(j[i]))
-        UT.append(L)
-        i-=1
-    TT = UT
-    
 def affich():
     global size,wb,bb
     canvas.config(width=size*(len(TT[0])+.5),height=size*(len(TT)))
