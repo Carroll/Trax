@@ -259,8 +259,6 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             valid = coupForce(a,b-1)
 
     c = t[1] # couleur à matcher vers l'est
-    if y==7:
-       import pdb; pdb.set_trace()
     if TT[y][x+1] == (2,2,2,2): # verif de case vide sinon pas possible
         if x+2<len(TT[0]):
             t2e = TT[y][(x+2)%len(TT[0])] # deux a l'est
