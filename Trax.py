@@ -203,11 +203,17 @@ def checkWin(x,y):
         time.sleep(3)
     return win,colorWin
 
+def restoreTT():
+    TT=[] #save
+    for j in range(len(TS)):
+        TT.append([])
+        TT[j][:] = TS[j][:]
+
 def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north east south west
     valid = True
     put = False
     a,b = x,y # pour decalage
-    global TT
+    global TT,TS
     TS=[] #save
     for j in range(len(TT)):
         TS.append([])
@@ -221,7 +227,7 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             #verif valid ouest et est
             if TT[y-1][x-1][1] != 2 and TT[y-1][x-1][1] != 1-c or TT[y-1][x+1][3] != 2 and TT[y-1][x+1][3] != 1-c:
                 #remettre TS
-                TT = TS
+                restoreTT()
                 return False,False
             TT[y-1][x] = plus
             put = True
@@ -235,7 +241,7 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             #verif valid nord et est
             if TT[y-2][x][2] != 2 and TT[y-2][x][2] != 1-c or TT[y-1][x+1][3] != 2 and TT[y-1][x+1][3] != 1-c:
                 #remettre TS
-                TT = TS
+                restoreTT()
                 return False,False
             TT[y-1][x] = back
             put = True
@@ -246,13 +252,15 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             #verif valid nord et ouest
             if TT[y-2][x][2] != 2 and TT[y-2][x][2] != 1-c or TT[y-1][x-1][1] != 2 and TT[y-1][x-1][1] != 1-c:
                 #remettre TS
-                TT = TS
+                restoreTT()
                 return False,False
             TT[y-1][x] = slash
             put = True
             valid = coupForce(a,b-1)
 
     c = t[1] # couleur à matcher vers l'est
+    if y==7:
+       import pdb; pdb.set_trace()
     if TT[y][x+1] == (2,2,2,2): # verif de case vide sinon pas possible
         if x+2<len(TT[0]):
             t2e = TT[y][(x+2)%len(TT[0])] # deux a l'est
@@ -261,7 +269,7 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
                 #verif valid sud et nord
                 if TT[y-1][x+1][2] != 2 and TT[y-1][x+1][2] != 1-c or TT[y+1][x+1][0] != 2 and TT[y+1][x+1][0] != 1-c:
                     #remettre TS
-                    TT = TS
+                    restoreTT()
                     return False,False
                 TT[y][x+1] = plus
                 put = True
@@ -276,7 +284,7 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             #verif valid sud et est
             if TT[y][x+2][3] != 2 and TT[y][x+2][3] != 1-c or TT[y+1][x+1][0] != 2 and TT[y+1][x+1][0] != 1-c:
                 #remettre TS
-                TT = TS
+                restoreTT()
                 return False,False
             TT[y][x+1] = slash
             put = True
@@ -287,7 +295,7 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             #verif valid nord et est
             if TT[y][x+2][3] != 2 and TT[y][x+2][3] != 1-c or TT[y-1][x+1][2] != 2 and TT[y-1][x+1][2] != 1-c:
                 #remettre TS
-                TT = TS
+                restoreTT()
                 return False,False
             TT[y][x+1] = back
             put = True
@@ -301,7 +309,7 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             #verif valid ouest et est
             if TT[y+1][x+1][3] != 2 and TT[y+1][x+1][3] != 1-c or TT[y+1][x-1][1] != 2 and TT[y+1][x-1][1] != 1-c:
                 #remettre TS
-                TT = TS
+                restoreTT()
                 return False,False
             TT[y+1][x] = plus
             put = True
@@ -314,7 +322,7 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             #verif valid sud et ouest
             if TT[y+2][x][0] != 2 and TT[y+2][x][0] != 1-c or TT[y+1][x-1][1] != 2 and TT[y+1][x-1][1] != 1-c:
                 #remettre TS
-                TT = TS
+                restoreTT()
                 return False,False
             TT[y+1][x] = back
             put = True
@@ -325,7 +333,7 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             #verif valid sud et est
             if TT[y+2][x][0] != 2 and TT[y+2][x][0] != 1-c or TT[y+1][x+1][3] != 2 and TT[y+1][x+1][3] != 1-c:
                 #remettre TS
-                TT = TS
+                restoreTT()
                 return False,False
             TT[y+1][x] = slash
             put = True
@@ -339,7 +347,7 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             #verif valid sud et nord
             if TT[y+1][x-1][0] != 2 and TT[y+1][x-1][0] != 1-c or TT[y-1][x-1][2] != 2 and TT[y-1][x-1][2] != 1-c:
                 #remettre TS
-                TT = TS
+                restoreTT()
                 return False,False
             TT[y][x-1] = plus
             put = True
@@ -353,7 +361,7 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             #verif valid ouest et sud
             if TT[y][x-2][1] != 2 and TT[y][x-2][1] != 1-c or TT[y+1][x-1][0] != 2 and TT[y+1][x-1][0] != 1-c:
                 #remettre TS
-                TT = TS
+                restoreTT()
                 return False,False
             TT[y][x-1] = back
             put = True
@@ -364,7 +372,7 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             #verif valid nord et ouest
             if TT[y][x-2][1] != 2 and TT[y][x-2][1] != 1-c or TT[y-1][x-1][2] != 2 and TT[y-1][x-1][2] != 1-c:
                 #remettre TS
-                TT = TS
+                restoreTT()
                 return False,False
             TT[y][x-1] = slash
             put = True
@@ -374,7 +382,7 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
 
 def coupForce(x,y):
     """ Checks for forced moves and then win completion, returns True if the forced move was valid """
-    global TT
+    global TT,TS
     a,b = x,y
     valid = True
     TS=[] #save
@@ -383,7 +391,7 @@ def coupForce(x,y):
         TS[j][:] = TT[j][:]
     valid,put = coupForceN(a,b)
     if not valid:
-        TT=TS
+        restoreTT()
         return False
     if put:
          win,colorWin=checkWin(x,y);
@@ -445,6 +453,7 @@ invConc = {v:k for k,v in Conc.items()}
 height = root.winfo_screenheight()-20 # window bar thickness
 correct=0.4
 TT=[]
+TS=[]
 for j in range(len(T)):
     L=[]
     for i in range(len(T[j])):
