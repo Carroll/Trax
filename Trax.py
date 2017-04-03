@@ -12,7 +12,23 @@ except:
 if len(sys.argv) > 1:
    gamestring = sys.argv[1]
 else:
-   gamestring="@0/ B1+ C1/ B0/ B3\ @3\ E2/ E1/ E4\ F2+ E0/ G1\ F0+ C6+ G4\ G0+ H1+ G0\ I3\ J3\ H7\ H8\ D9+ C10\ F9\ F10\ F11\ E12+ C11+ H10+ G12+ H5+ I6+ I9+ J6/ K8/ A9/ @8\ E13\ C10+ E14+ E15\ E16\ C14\ C12+ B11+ C15+ B14/ A14+ @14\ B15\ J13+ K10\ J14/ I14\ G14+ M6/ K5+ L10+ N5+ O4\ N3+ M2+ P3/ N2/ N8\ O9/ I0/ J1/ N2/ I0\ H1\ Q5+ M2/ E5\ D5\ N12\ P12+ Q11+ R10+ P13\ Q13\ K1/ I0+ H0/ H0/ H0/ G1/ H0+ G0+ F1+ G0/ E3/ D3/ F5/ E4+ H10+ G8+ E8+ G11+ C3/"
+   gamestring = "@0/  B1+  C1/  B0/  B3\    @3\  E2/  E1/  E4\  F2+  " \
+                "E0/  G1\  F0+  C6+  G4\    G0+  H1+  G0\  I3\  J3\  " \
+                "H7\  H8\  D9+  C10\ F9\    F10\ F11\ E12+ C11+ H10+ " \
+                "G12+ H5+  I6+  I9+  J6/    K8/  A9/  @8\  E13\ C10+ " \
+                "E14+ E15\ E16\ C14\ C12+   B11+ C15+ B14/ A14+ @14\ " \
+                "B15\ J13+ K10\ J14/ I14\   G14+ M6/  K5+  L10+ N5+  " \
+                "O4\  N3+  M2+  P3/  N2/    N8\  O9/  I0/  J1/  N2/  " \
+                "I0\  H1\  Q5+  M2/  E5\    D5\  N12\ P12+ Q11+ R10+ " \
+                "P13\ Q13\ K1/  I0+  H0/    H0/  H0/  G1/  H0+  G0+  " \
+                "F1+  G0/  E3/  D3/  F5/    E4+  H10+ G8+  E8+  G11+ " \
+                "C3/  L8/  L9+ "
+
+   gamestring = "@0/  B1/  C1/  C2/  C3/    C4+  C5/  B5\  A5\  @5/ " \
+                "A4+  A3+  A2/  C2+  "
+
+   # if the last move C2+ is replaced with C4+, the invalid move is raised correcytly
+   # if with B4/, still no error
 
 c=gamestring.replace(' ','')
 game=list(c)
