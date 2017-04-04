@@ -251,6 +251,9 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             #    TT.insert(0,len(T[0])*[(2,2,2,2)])
             #    b+=1
             valid = coupForce(a,b-1)
+            if not valid:
+               restoreTT()
+               return False,False
         tno = TT[y-1][x-1] # case NO
         if tno[1]==c: # face est de case NO
             back = (1-c,1-c,c,c)
@@ -262,6 +265,9 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             TT[y-1][x] = back
             put = True
             valid = coupForce(a,b-1)
+            if not valid:
+               restoreTT()
+               return False,False
         tne = TT[y-1][x+1] # case NE
         if tne[3]==c: # face ouest de case NE
             slash = (1-c,c,c,1-c)
@@ -273,6 +279,9 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             TT[y-1][x] = slash
             put = True
             valid = coupForce(a,b-1)
+            if not valid:
+               restoreTT()
+               return False,False
 
     c = t[1] # couleur à matcher vers l'est
     if TT[y][x+1] == (2,2,2,2): # verif de case vide sinon pas possible
@@ -292,6 +301,9 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
                 #        i.append((2,2,2,2))
                 
                 valid = coupForce(a+1,b)
+                if not valid:
+                   restoreTT()
+                   return False,False
         tne = TT[y-1][x+1] # case NE
         if tne[2]==c: # face sud de case NE
             slash = (c,1-c,1-c,c)
@@ -303,6 +315,9 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             TT[y][x+1] = slash
             put = True
             valid = coupForce(a+1,b)
+            if not valid:
+               restoreTT()
+               return False,False
         tse = TT[y+1][x+1] # case SE
         if tse[0]==c: # face nord de case SE
             back = (1-c,1-c,c,c)
@@ -314,6 +329,9 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             TT[y][x+1] = back
             put = True
             valid = coupForce(a+1,b)
+            if not valid:
+               restoreTT()
+               return False,False
 
     c = t[2] # couleur à matcher vers Sud
     if TT[y+1][x] == (2,2,2,2): # verif de case vide sinon pas possible
@@ -330,6 +348,9 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             # if y+1==len(TT)-1:
             #    TT.append(len(T[0])*[(2,2,2,2)])
             valid = coupForce(a,b+1)
+            if not valid:
+               restoreTT()
+               return False,False
         tse = TT[y+1][x+1] # case SE
         if tse[3]==c: # face ouest de case SE
             back = (c,c,1-c,1-c)
@@ -341,6 +362,9 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             TT[y+1][x] = back
             put = True
             valid = coupForce(a,b+1)
+            if not valid:
+               restoreTT()
+               return False,False
         tso = TT[y+1][x-1] # case SO
         if tso[1]==c: # face est de case SO
             slash = (c,1-c,1-c,c)
@@ -352,6 +376,9 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             TT[y+1][x] = slash
             put = True
             valid = coupForce(a,b+1)
+            if not valid:
+               restoreTT()
+               return False,False
 
     c = t[3] # couleur à matcher vers ouest
     if TT[y][x-1] == (2,2,2,2): # verif de case vide sinon pas possible
@@ -369,6 +396,9 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             #    TT.insert(0,len(T[0])*[(2,2,2,2)])
             #    b+=1
             valid = coupForce(a-1,b)
+            if not valid:
+               restoreTT()
+               return False,False
         tno = TT[y-1][x-1] # case NO
         if tno[2]==c: # face sud de case NO
             back = (c,c,1-c,1-c)
@@ -380,6 +410,9 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             TT[y][x-1] = back
             put = True
             valid = coupForce(a-1,b)
+            if not valid:
+               restoreTT()
+               return False,False
         tso = TT[y+1][x-1] # case SO
         if tso[0]==c: # face nord de case SO
             slash = (1-c,c,c,1-c)
@@ -391,6 +424,9 @@ def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north e
             TT[y][x-1] = slash
             put = True
             valid = coupForce(a-1,b)
+            if not valid:
+               restoreTT()
+               return False,False
 
     return valid,put
 
