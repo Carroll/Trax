@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+# vim: tabstop=6 expandtab shiftwidth=3 softtabstop=3
 from __future__ import print_function
 import sys
+import time
 try:
    import Tkinter as tk
 except:
@@ -10,7 +12,24 @@ except:
 if len(sys.argv) > 1:
    gamestring = sys.argv[1]
 else:
-   gamestring="@0/ @1/ A0/ @1/ B0/ B4\\ D3/ A0/ @3+ A0/ @1+ @2+ F3/ D5+ G4+ G2\\ H3\\ G1+ G0\\ G0\\ H2+ I5+ J5\\ H0\\ J3\\ D4+ F3+ F9+ H8+ I7+ G10\\ K7/ L7/ G11\\ E10+ D9/ @5/ B4\\ A3/ C2+"
+   gamestring = "@0/  B1+  C1/  B0/  B3\    @3\  E2/  E1/  E4\  F2+  " \
+                "E0/  G1\  F0+  C6+  G4\    G0+  H1+  G0\  I3\  J3\  " \
+                "H7\  H8\  D9+  C10\ F9\    F10\ F11\ E12+ C11+ H10+ " \
+                "G12+ H5+  I6+  I9+  J6/    K8/  A9/  @8\  E13\ C10+ " \
+                "E14+ E15\ E16\ C14\ C12+   B11+ C15+ B14/ A14+ @14\ " \
+                "B15\ J13+ K10\ J14/ I14\   G14+ M6/  K5+  L10+ N5+  " \
+                "O4\  N3+  M2+  P3/  N2/    N8\  O9/  I0/  J1/  N2/  " \
+                "I0\  H1\  Q5+  M2/  E5\    D5\  N12\ P12+ Q11+ R10+ " \
+                "P13\ Q13\ K1/  I0+  H0/    H0/  H0/  G1/  H0+  G0+  " \
+                "F1+  G0/  E3/  D3/  F5/    E4+  H10+ G8+  E8+  G11+ " \
+                "C3/  L8/  L9+ "
+
+   gamestring = "@0/  B1/  C1/  C2/  C3/    C4+  C5/  B5\  A5\  @5/ " \
+                "A4+  A3+  A2/  C2+  "
+
+   # if the last move C2+ is replaced with C4+, the invalid move is raised correcytly
+   # if with B4/, still no error
+
 c=gamestring.replace(' ','')
 game=list(c)
 
@@ -24,10 +43,64 @@ T=[[('',True),('',True),('',True),('',True)],
    [('',True),('',True),('',True),('',True)]
    ]
 
+colors = ["White", "Black"]
+
 def coord(x,y,string):
     label = tk.Label(canvas, text=string, bg="light green")
     label.place(x=size/2-5+x*size,y=size/2-5+y*size)
     Label.append(label)
+
+def slashg(x,y,sens,color):
+    canvas.create_rectangle(x*size,y*size,(x+1)*size,(y+1)*size,fill="red",outline="grey",width=2)
+    if not sens:
+       if color==0:
+          canvas.create_circle_arc(x*size, y*size, size/2, fill="red", outline="black", style=tk.ARC, width=bb, start=270, end=360)
+          canvas.create_circle_arc((x+1)*size, (y+1)*size, size/2, fill="red", outline="light green", style=tk.ARC, width=wb, start=90, end=180)
+       else:
+          canvas.create_circle_arc(x*size, y*size, size/2, fill="red", outline="green", style=tk.ARC, width=bb, start=270, end=360)
+          canvas.create_circle_arc((x+1)*size, (y+1)*size, size/2, fill="red", outline="white", style=tk.ARC, width=wb, start=90, end=180)
+    else:
+       if color==0:
+          canvas.create_circle_arc(x*size, y*size, size/2, fill="red", outline="light green", style=tk.ARC, width=wb, start=270, end=360)
+          canvas.create_circle_arc((x+1)*size, (y+1)*size, size/2, fill="red", outline="black", style=tk.ARC, width=bb, start=90, end=180)
+       else:
+          canvas.create_circle_arc(x*size, y*size, size/2, fill="red", outline="white", style=tk.ARC, width=wb, start=270, end=360)
+          canvas.create_circle_arc((x+1)*size, (y+1)*size, size/2, fill="red", outline="green", style=tk.ARC, width=bb, start=90, end=180)
+
+def backslashg(x,y,sens,color):
+    canvas.create_rectangle(x*size,y*size,(x+1)*size,(y+1)*size,fill="red",outline="grey",width=2)
+    if not sens:
+       if color==0:
+          canvas.create_circle_arc((x+1)*size, y*size, size/2, fill="red", outline="black", style=tk.ARC, width=bb, start=180, end=270)
+          canvas.create_circle_arc(x*size, (y+1)*size, size/2, fill="red", outline="light green", style=tk.ARC, width=wb, start=0, end=90)
+       else:
+          canvas.create_circle_arc((x+1)*size, y*size, size/2, fill="red", outline="green", style=tk.ARC, width=bb, start=180, end=270)
+          canvas.create_circle_arc(x*size, (y+1)*size, size/2, fill="red", outline="white", style=tk.ARC, width=wb, start=0, end=90)
+    else:
+       if color==0:
+          canvas.create_circle_arc((x+1)*size, y*size, size/2, fill="red", outline="light green", style=tk.ARC, width=wb, start=180, end=270)
+          canvas.create_circle_arc(x*size, (y+1)*size, size/2, fill="red", outline="black", style=tk.ARC, width=bb, start=0, end=90)
+       else:
+          canvas.create_circle_arc((x+1)*size, y*size, size/2, fill="red", outline="white", style=tk.ARC, width=wb, start=180, end=270)
+          canvas.create_circle_arc(x*size, (y+1)*size, size/2, fill="red", outline="green", style=tk.ARC, width=bb, start=0, end=90)
+  
+def plusg(x,y,sens,color):
+    canvas.create_rectangle(x*size,y*size,(x+1)*size,(y+1)*size,fill="red",outline="grey",width=2)
+    if sens:
+        if color==0:
+           canvas.create_line(x*size+size/2,y*size,x*size+size/2,(y+1)*size,fill="light green", width=wb)
+           canvas.create_line(x*size,y*size+size/2,(x+1)*size,y*size+size/2,fill="black", width=bb)
+        else:
+           canvas.create_line(x*size+size/2,y*size,x*size+size/2,(y+1)*size,fill="white", width=wb)
+           canvas.create_line(x*size,y*size+size/2,(x+1)*size,y*size+size/2,fill="green", width=bb)
+    else:
+        if color==0:
+           canvas.create_line(x*size,y*size+size/2,(x+1)*size,y*size+size/2,fill="light green", width=wb)
+           canvas.create_line(x*size+size/2,y*size,x*size+size/2,(y+1)*size,fill="black", width=bb)
+        else:
+           canvas.create_line(x*size,y*size+size/2,(x+1)*size,y*size+size/2,fill="white", width=wb)
+           canvas.create_line(x*size+size/2,y*size,x*size+size/2,(y+1)*size,fill="green", width=bb)
+       
 
 def slash(x,y,sens):
     canvas.create_rectangle(x*size,y*size,(x+1)*size,(y+1)*size,fill="red",outline="grey",width=2)
@@ -66,22 +139,6 @@ def _create_circle_arc(self, x, y, r, **kwargs):
         del kwargs["end"]
     return self.create_arc(x-r, y-r, x+r, y+r, **kwargs)
 
-def tournet(t):
-    (a,b,c,d)=t
-    return (b,c,d,a)
-
-def tourneTT():
-    global TT
-    UT=[]
-    i=len(TT[0])-1
-    while i>=0:
-        L=[]
-        for j in TT:
-            L.append(tournet(j[i]))
-        UT.append(L)
-        i-=1
-    TT = UT
-    
 def affich():
     global size,wb,bb
     canvas.config(width=size*(len(TT[0])+.5),height=size*(len(TT)))
@@ -118,16 +175,69 @@ def affich():
             elif t[0]=='+':
                 plus(i,j,t[1])
                 
-def coupForceN(x,y): # on a joué en x,y on ne regarde qu'au nord (ouest et est)
+def checkWin(x,y):
+    # check white path (0) and then black (1)
+    win = False
+    colorWin = 2
+    for color in range(2):
+       xp,yp=x,y
+       loop = True
+       colorGreen = False
+       edge=0
+       while loop:
+          try:
+             if abs(edge-TT[yp][xp].index(color))==2:
+                edge = 3-TT[yp][xp][::-1].index(color)
+             else:
+                edge = TT[yp][xp].index(color)
+          except:
+             loop = False
+             break
+          if edge==0: yp-=1
+          elif edge==1: xp+=1
+          elif edge==2: yp+=1
+          elif edge==3: xp-=1
+          if xp==x and yp==y:
+             if colorGreen:
+                loop = False
+             else:
+                colorGreen = True          
+                win = True
+                colorWin = color
+                print ("Loop for color",colors[colorWin])
+                if colorWin == turn:
+                   print ("Well done!")
+          if colorGreen:
+             t = invConc[invTupDic[TT[yp][xp]]]
+             if t[0]=='/':
+                slashg(xp,yp,t[1],color)
+             elif t[0]=='\\':
+                backslashg(xp,yp,t[1],color)
+             elif t[0]=='+':
+                plusg(xp,yp,t[1],color)
+             canvas.update_idletasks()
+             #import pdb; pdb.set_trace()
+    if win: 
+        time.sleep(3)
+    return win,colorWin
+
+def restoreTT():
+    TT=[] #save
+    for j in range(len(TS)):
+        TT.append([])
+        TT[j][:] = TS[j][:]
+
+def coupForceN(x,y): # after playing at x,y we look in the 4 directions, north east south west
     valid = True
+    put = False
     a,b = x,y # pour decalage
-    global TT
+    global TT,TS
     TS=[] #save
     for j in range(len(TT)):
         TS.append([])
         TS[j][:] = TT[j][:]
     t=TT[y][x]
-    c = t[0] # couleur à matcher
+    c = t[0] # couleur à matcher vers Nord
     if TT[y-1][x] == (2,2,2,2): # verif de case vide sinon pas possible
         t2n = TT[y-2][x] # deux au nord
         if t2n[2]==c: # face sud 2 plus loin bonne couleur
@@ -135,53 +245,208 @@ def coupForceN(x,y): # on a joué en x,y on ne regarde qu'au nord (ouest et est)
             #verif valid ouest et est
             if TT[y-1][x-1][1] != 2 and TT[y-1][x-1][1] != 1-c or TT[y-1][x+1][3] != 2 and TT[y-1][x+1][3] != 1-c:
                 #remettre TS
-                TT = TS
-                return False
+                restoreTT()
+                return False,False
             TT[y-1][x] = plus
-            if y-1==1:
-                TT.insert(0,len(T[0])*[(2,2,2,2)])
-                b+=1
+            put = True
+            #if y-1==1:
+            #    TT.insert(0,len(T[0])*[(2,2,2,2)])
+            #    b+=1
             valid = coupForce(a,b-1)
+            if not valid:
+               restoreTT()
+               return False,False
         tno = TT[y-1][x-1] # case NO
         if tno[1]==c: # face est de case NO
             back = (1-c,1-c,c,c)
             #verif valid nord et est
             if TT[y-2][x][2] != 2 and TT[y-2][x][2] != 1-c or TT[y-1][x+1][3] != 2 and TT[y-1][x+1][3] != 1-c:
                 #remettre TS
-                TT = TS
-                return False
+                restoreTT()
+                return False,False
             TT[y-1][x] = back
+            put = True
             valid = coupForce(a,b-1)
+            if not valid:
+               restoreTT()
+               return False,False
         tne = TT[y-1][x+1] # case NE
         if tne[3]==c: # face ouest de case NE
             slash = (1-c,c,c,1-c)
             #verif valid nord et ouest
             if TT[y-2][x][2] != 2 and TT[y-2][x][2] != 1-c or TT[y-1][x-1][1] != 2 and TT[y-1][x-1][1] != 1-c:
                 #remettre TS
-                TT = TS
-                return False
+                restoreTT()
+                return False,False
             TT[y-1][x] = slash
+            put = True
             valid = coupForce(a,b-1)
-    return valid
+            if not valid:
+               restoreTT()
+               return False,False
+
+    c = t[1] # couleur à matcher vers l'est
+    if TT[y][x+1] == (2,2,2,2): # verif de case vide sinon pas possible
+        if x+2<len(TT[0]):
+            t2e = TT[y][(x+2)%len(TT[0])] # deux a l'est
+            if t2e[3]==c: # face ouest 2 plus loin bonne couleur
+                plus = (1-c,c,1-c,c)
+                #verif valid sud et nord
+                if TT[y-1][x+1][2] != 2 and TT[y-1][x+1][2] != 1-c or TT[y+1][x+1][0] != 2 and TT[y+1][x+1][0] != 1-c:
+                    #remettre TS
+                    restoreTT()
+                    return False,False
+                TT[y][x+1] = plus
+                put = True
+                #if x>=len(TT[0])-2:
+                #    for i in TT:
+                #        i.append((2,2,2,2))
+                
+                valid = coupForce(a+1,b)
+                if not valid:
+                   restoreTT()
+                   return False,False
+        tne = TT[y-1][x+1] # case NE
+        if tne[2]==c: # face sud de case NE
+            slash = (c,1-c,1-c,c)
+            #verif valid sud et est
+            if TT[y][x+2][3] != 2 and TT[y][x+2][3] != 1-c or TT[y+1][x+1][0] != 2 and TT[y+1][x+1][0] != 1-c:
+                #remettre TS
+                restoreTT()
+                return False,False
+            TT[y][x+1] = slash
+            put = True
+            valid = coupForce(a+1,b)
+            if not valid:
+               restoreTT()
+               return False,False
+        tse = TT[y+1][x+1] # case SE
+        if tse[0]==c: # face nord de case SE
+            back = (1-c,1-c,c,c)
+            #verif valid nord et est
+            if TT[y][x+2][3] != 2 and TT[y][x+2][3] != 1-c or TT[y-1][x+1][2] != 2 and TT[y-1][x+1][2] != 1-c:
+                #remettre TS
+                restoreTT()
+                return False,False
+            TT[y][x+1] = back
+            put = True
+            valid = coupForce(a+1,b)
+            if not valid:
+               restoreTT()
+               return False,False
+
+    c = t[2] # couleur à matcher vers Sud
+    if TT[y+1][x] == (2,2,2,2): # verif de case vide sinon pas possible
+        t2s = TT[(y+2)%len(TT)][x] # deux au sud
+        if t2s[0]==c: # face nord 2 plus loin bonne couleur
+            plus = (c,1-c,c,1-c)
+            #verif valid ouest et est
+            if TT[y+1][x+1][3] != 2 and TT[y+1][x+1][3] != 1-c or TT[y+1][x-1][1] != 2 and TT[y+1][x-1][1] != 1-c:
+                #remettre TS
+                restoreTT()
+                return False,False
+            TT[y+1][x] = plus
+            put = True
+            # if y+1==len(TT)-1:
+            #    TT.append(len(T[0])*[(2,2,2,2)])
+            valid = coupForce(a,b+1)
+            if not valid:
+               restoreTT()
+               return False,False
+        tse = TT[y+1][x+1] # case SE
+        if tse[3]==c: # face ouest de case SE
+            back = (c,c,1-c,1-c)
+            #verif valid sud et ouest
+            if TT[y+2][x][0] != 2 and TT[y+2][x][0] != 1-c or TT[y+1][x-1][1] != 2 and TT[y+1][x-1][1] != 1-c:
+                #remettre TS
+                restoreTT()
+                return False,False
+            TT[y+1][x] = back
+            put = True
+            valid = coupForce(a,b+1)
+            if not valid:
+               restoreTT()
+               return False,False
+        tso = TT[y+1][x-1] # case SO
+        if tso[1]==c: # face est de case SO
+            slash = (c,1-c,1-c,c)
+            #verif valid sud et est
+            if TT[y+2][x][0] != 2 and TT[y+2][x][0] != 1-c or TT[y+1][x+1][3] != 2 and TT[y+1][x+1][3] != 1-c:
+                #remettre TS
+                restoreTT()
+                return False,False
+            TT[y+1][x] = slash
+            put = True
+            valid = coupForce(a,b+1)
+            if not valid:
+               restoreTT()
+               return False,False
+
+    c = t[3] # couleur à matcher vers ouest
+    if TT[y][x-1] == (2,2,2,2): # verif de case vide sinon pas possible
+        t2o= TT[y][x-2] # deux a l'ouest
+        if t2o[1]==c: # face est 2 plus loin bonne couleur
+            plus = (1-c,c,1-c,c)
+            #verif valid sud et nord
+            if TT[y+1][x-1][0] != 2 and TT[y+1][x-1][0] != 1-c or TT[y-1][x-1][2] != 2 and TT[y-1][x-1][2] != 1-c:
+                #remettre TS
+                restoreTT()
+                return False,False
+            TT[y][x-1] = plus
+            put = True
+            #if y-1==1:
+            #    TT.insert(0,len(T[0])*[(2,2,2,2)])
+            #    b+=1
+            valid = coupForce(a-1,b)
+            if not valid:
+               restoreTT()
+               return False,False
+        tno = TT[y-1][x-1] # case NO
+        if tno[2]==c: # face sud de case NO
+            back = (c,c,1-c,1-c)
+            #verif valid ouest et sud
+            if TT[y][x-2][1] != 2 and TT[y][x-2][1] != 1-c or TT[y+1][x-1][0] != 2 and TT[y+1][x-1][0] != 1-c:
+                #remettre TS
+                restoreTT()
+                return False,False
+            TT[y][x-1] = back
+            put = True
+            valid = coupForce(a-1,b)
+            if not valid:
+               restoreTT()
+               return False,False
+        tso = TT[y+1][x-1] # case SO
+        if tso[0]==c: # face nord de case SO
+            slash = (1-c,c,c,1-c)
+            #verif valid nord et ouest
+            if TT[y][x-2][1] != 2 and TT[y][x-2][1] != 1-c or TT[y-1][x-1][2] != 2 and TT[y-1][x-1][2] != 1-c:
+                #remettre TS
+                restoreTT()
+                return False,False
+            TT[y][x-1] = slash
+            put = True
+            valid = coupForce(a-1,b)
+            if not valid:
+               restoreTT()
+               return False,False
+
+    return valid,put
 
 def coupForce(x,y):
-    global TT
+    """ Checks for forced moves and then win completion, returns True if the forced move was valid """
+    global TT,TS
     a,b = x,y
     valid = True
-    i=0
     TS=[] #save
     for j in range(len(TT)):
         TS.append([])
         TS[j][:] = TT[j][:]
-    while valid and i<4:
-        i+=1
-        valid = coupForceN(a,b)
-        if valid:
-            tourneTT()
-            a,b = b,len(TT)-1-a
-        else: 
-            TT=TS
-            return False
+    valid,put = coupForceN(a,b)
+    if not valid:
+        restoreTT()
+        return False
+    if put:
+         win,colorWin=checkWin(x,y);
     return valid
 
 def mettreT(x,y,t):
@@ -194,16 +459,20 @@ def mettreT(x,y,t):
     f=t[0]
     #print (t,Conc[t])
     tup = TupDic[Conc[t]]
-    if TT[y-1][x][2] !=2 and TT[y-1][x][2] != tup[0] or TT[y+1][x][0] !=2 and TT[y+1][x][0] != tup[2] or       TT[y][x-1][1] !=2 and TT[y][x-1][1] != tup[3] or TT[y][x+1][3] !=2 and TT[y][x+1][3] != tup[1]:
+    if TT[y-1][x][2] !=2 and TT[y-1][x][2] != tup[0] or TT[y+1][x][0] !=2 and TT[y+1][x][0] != tup[2] or\
+       TT[y][x-1][1] !=2 and TT[y][x-1][1] != tup[3] or TT[y][x+1][3] !=2 and TT[y][x+1][3] != tup[1]:
             valid = False
             tup = TupDic[Conc[(f,False)]]
-            if TT[y-1][x][2] !=2 and TT[y-1][x][2] != tup[0] or TT[y+1][x][0] !=2 and TT[y+1][x][0] != tup[2] or               TT[y][x-1][1] !=2 and TT[y][x-1][1] != tup[3] or TT[y][x+1][3] !=2 and TT[y][x+1][3] != tup[1]:
+            if TT[y-1][x][2] !=2 and TT[y-1][x][2] != tup[0] or TT[y+1][x][0] !=2 and TT[y+1][x][0] != tup[2] or\
+               TT[y][x-1][1] !=2 and TT[y][x-1][1] != tup[3] or TT[y][x+1][3] !=2 and TT[y][x+1][3] != tup[1]:
                 valid = False
             else:
                 TT[y][x] = tup
+                win,colorWin=checkWin(x,y);
                 valid = coupForce(x,y)
     else:
         TT[y][x] = tup
+        win,colorWin=checkWin(x,y);
         valid = coupForce(x,y)
     if valid:
         if x==1:
@@ -236,6 +505,7 @@ invConc = {v:k for k,v in Conc.items()}
 height = root.winfo_screenheight()-20 # window bar thickness
 correct=0.4
 TT=[]
+TS=[]
 for j in range(len(T)):
     L=[]
     for i in range(len(T[j])):
@@ -245,6 +515,7 @@ size=min(60,height/(len(TT)+correct))
 wb=size/8
 bb=size/8+1
 valid = True
+turn = 0 # white
 # game is a string of triplets XYT with Type \\ instead of \ 
 while len(game)>0:
     x=ord(game.pop(0))-63
@@ -258,18 +529,21 @@ while len(game)>0:
     valid = mettreT(x,y,(t,True))
     if valid:
         Moves.append((x,y,(t,True)))
+        turn = 1-turn
     else:
         valid = mettreT(x,y,(t,False))
         if valid:
             Moves.append((x,y,(t,False)))
+            turn = 1-turn
 
 size=min(60,height/(len(TT)+correct))
 affich()    
 
 move = ''
 while move != 'q':
-    if sys.version[0]=='2': move = raw_input("move? ")
-    else: move = input("move? ")
+    text = "Move for "+colors[turn]+"? "
+    if sys.version[0]=='2': move = raw_input(text)
+    else: move = input(text)
     if move=="" or move=="@@":
        print("undoing...")
        if Moves != []:
@@ -280,8 +554,10 @@ while move != 'q':
            for i in range(len(T[j])):
                L.append(TupDic[Conc[T[j][i]]])
            TT.append(L)
+       turn = 0
        for move in Moves:
            mettreT(*(move))
+           turn = 1-turn
     else:
         cx = move[0].upper()
         cy = move[1].upper()
@@ -296,10 +572,12 @@ while move != 'q':
         valid = mettreT(x,y,(t,True))
         if valid:
              Moves.append((x,y,(t,True)))
+             turn = 1-turn
         else:
             valid = mettreT(x,y,(t,False))
             if valid:
                 Moves.append((x,y,(t,False)))
+                turn = 1-turn
     canvas.delete("all")
     # todo : replace by other method as label.destroy takes too much time
     for label in Label:
