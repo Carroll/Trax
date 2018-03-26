@@ -556,8 +556,11 @@ while move != 'q':
            TT.append(L)
        turn = 0
        for move in Moves:
+           movtext = chr(ord('@')-1+move[0])+str(move[1]-1)+move[2][0]
+           print (movtext,end=' ')
            mettreT(*(move))
            turn = 1-turn
+       print ()
     else:
         cx = move[0].upper()
         cy = move[1].upper()
